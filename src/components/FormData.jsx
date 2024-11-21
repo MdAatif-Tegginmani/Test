@@ -1,46 +1,143 @@
+import React, { useState } from 'react'
+import supabase from '../config/supabaseClient.js'
 
-// import { PhotoIcon } from '@heroicons/react/24/solid'
+const FormData = ({ showModal, setShowModal }) => {
+  const [formData, setFormData] = useState({
+    title: "",
+    details: "",
+    image: null,
+  });
+  const [loading, setLoading] = useState(false);
 
-export default function Example() {
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+  const handleImageChange = async (e) => {
+    setFormData({ ...formData, image: e.target.files[0] });
+  };
+
+
+
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+
+
+
+
+    const { data, error } = await supabase.from('Posts').insert([{
+      title: formData.title,
+      details: formData.details,
+      image: formData.image,
+
+    }])
+
+    if (error) {
+      console.error("Error inserting post:", error.message);
+    } else {
+      console.log("Post inserted successfully:", data);
+    }
+
+
+
+
+
+
+
+    setFormData({ title: "", details: "", image: null });
+    setLoading(false)
+    setShowModal(false);
+  };
+
+
+
+
+
+
+
+
   return (
-    <form>
-      <div className="space-y-12">
-        <div className="border-b border-gray-900/10 pb-12">
+    <div className=" bg-gray-100 flex flex-col items-center justify-center">
 
 
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-4">
-              <label htmlFor="username" className="block text-sm/6 font-medium text-gray-900">
-                Title
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                  <input
-                    id="username"
-                    name="username"
-                    type="text"
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-lg font-bold mb-4">Add New Post</h2>
 
-                    autoComplete="username"
-                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm/6"
-                  />
-                </div>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label htmlFor="title" className="block text-sm font-medium">
+                  Title
+                </label>
+                <input
+                  type="text"
+                  id="title"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleInputChange}
+                  className="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+                  required
+                />
               </div>
-            </div>
 
+              <div className="mb-4">
+                <label htmlFor="details" className="block text-sm font-medium">
+                  Details
+                </label>
+                <textarea
+                  id="details"
+                  name="details"
+                  value={formData.details}
+                  onChange={handleInputChange}
+                  className="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+                  required
+                ></textarea>
+              </div>
 
+              <div className="mb-4">
+                <label htmlFor="image" className="block text-sm font-medium">
+                  Upload Image
+                </label>
+                <input
+                  type="file"
+                  id="image"
+                  name="image"
+                  onChange={handleImageChange}
+                  className="w-full mt-1"
+                />
+              </div>
 
-            <div className="col-span-full">
-              <label htmlFor="cover-photo" className="block text-sm/6 font-medium text-gray-900">
-                Add Image
-              </label>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md mr-2"
+                  disabled={loading}
 
-            </div>
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                >
+                  {loading ? "Submitting..." : "Submit"}
+
+                </button>
+              </div>
+            </form>
           </div>
+        </div>
+      )}
+    </div>
+  );
 
-
-          </div>
-          </div>
-
-        </form>
-        )
 }
+
+export default FormData
