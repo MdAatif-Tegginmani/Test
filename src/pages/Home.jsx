@@ -9,8 +9,7 @@ const Home = () => {
 
   const [fetchError, setFetchErrors] = useState(null)
   const [posts, setPosts] = useState(null)
-  const [sidebarOpen, setSidebarOpen] = useState(false); // State to manage sidebar visibility
-
+  const [sidebarOpen, setSidebarOpen] = useState(false); 
 
 
   useEffect(() => {
@@ -34,6 +33,7 @@ const Home = () => {
     handleData()
   }, [])
 
+  
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen); // Toggle sidebar state
   };

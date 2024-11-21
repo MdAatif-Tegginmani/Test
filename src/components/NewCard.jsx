@@ -14,7 +14,7 @@ export default function NewCard({post}) {
     </div>
       <div className='m-auto'>
         <h3 className='text-center	'>{post.title}</h3>
-        <p className='text-left p-4'>{post.details}</p>
+        <p className='text-left   p-4'>{post.details}</p>
       </div>
       
     </div>
