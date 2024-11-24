@@ -3,8 +3,9 @@ import NewCard from './NewCard'
 import FormData from './FormData'
 
 
-const List = ({posts, fetchError }) => {
+const List = ({posts, fetchError, onDelete }) => {
   const [showModal, setShowModal] = useState(false);
+
   return (
     <div>
     <button
@@ -16,12 +17,15 @@ const List = ({posts, fetchError }) => {
     Add 
     
     </button>
+
+
+
     <div className='grid grid-cols-3 mt-20   gap-8 '>
     
     {fetchError && (<p>{fetchError}</p>)}
     { posts ? (
       posts.map((post , index)=>(
-        <NewCard key={index} post = {post} />
+        <NewCard key={index} onDelete={onDelete} post = {post} />
         
       ))
     ):(

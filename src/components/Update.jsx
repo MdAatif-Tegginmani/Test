@@ -1,5 +1,5 @@
 import React from 'react'
-import { replace, useNavigate, useParams } from 'react-router-dom'
+import {  useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import supabase from '../config/supabaseClient'
 
@@ -19,6 +19,19 @@ const Update = () => {
         .from('Posts')
         .update({title,details})
         .eq('id',id)
+        .select()
+
+        if(error){
+            console.log(error)
+
+        }
+        if(data){
+            console.log(data)
+            navigate('/')
+
+
+
+        }
 
     }
 

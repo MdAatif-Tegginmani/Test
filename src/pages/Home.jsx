@@ -9,14 +9,28 @@ const Home = () => {
 
   const [fetchError, setFetchErrors] = useState(null)
   const [posts, setPosts] = useState(null)
-  const [sidebarOpen, setSidebarOpen] = useState(false); 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [orderBy, setOrderBy] = useState('created at');
+
+
+
+
+  const handleDelete = (id) => {
+    setPosts(prevPosts => {
+      return prevPosts.filter(sm => sm.id !== id)
+    })
+  }
+
 
 
   useEffect(() => {
 
     const handleData = async () => {
 
-      const { data, error } = await supabase.from('Posts').select()
+      const { data, error } = await supabase
+      .from('Posts')
+      .select()
+      // .order(orderBy, { ascending: false })
 
       if (error) {
         setFetchErrors("Could not fetch the data")
@@ -31,9 +45,9 @@ const Home = () => {
     }
 
     handleData()
-  }, [])
+  }, [orderBy])
 
-  
+
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen); // Toggle sidebar state
   };
@@ -49,16 +63,30 @@ const Home = () => {
         >
 
           <Sidebar />
-          </div>
 
 
-          <div className="flex-1 p-4 overflow-auto">
-            <List error={fetchError} posts={posts} />
-          </div>
         </div>
 
+
+        <div className="flex-1 p-4 overflow-auto">
+
+          <div className='order-them flex justify-around '>
+            <p>Sort</p>
+            <button className='border border-black p-2' onClick={() => setOrderBy('created at')}>Time created</button>
+            <button className='border border-black p-2' onClick={() => setOrderBy('title')}>Title</button>
+
+            {orderBy}
+            {    // <button onClick={()=> setOrderBy('')}>Time createdx</button>
+            }
+
+          </div>
+
+          <List error={fetchError}   onDelete={handleDelete} posts={posts} />
+        </div>
       </div>
-      )
+
+    </div>
+  )
 }
 
-      export default Home
+export default Home

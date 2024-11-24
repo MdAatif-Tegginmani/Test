@@ -1,15 +1,37 @@
 import * as React from 'react';
 import { Link } from "react-router-dom"
 import { MdOutlineEdit } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
+import supabase from '../config/supabaseClient';
 
 
 
 
 
 
+export default function NewCard({ post,onDelete }) {
+  
+  const handleDelete = async () =>{
+    const {data, error} = await supabase
+    .from('Posts')
+    .delete()
+    .eq('id' , post.id)
+    .select()
 
 
-export default function NewCard({ post }) {
+    if(error){
+      console.log(error)
+    }
+    if(data){
+      console.log(data)
+      onDelete(post.id)
+
+    }
+
+  }
+
+
+
   return (
 
     <div className='min-w-64 h-auto  border border-black drop-shadow-md rounded-md '>
@@ -20,10 +42,14 @@ export default function NewCard({ post }) {
         <p className='text-left text-wrap w-auto p-4'>{post.details}</p>
 
       </div>
-      <div className='m-auto p-4 '>
+      <div className='flex 	m-auto p-4 '>
         <Link to={'/' + post.id}>
           <MdOutlineEdit className='border  border-slate-900 rounded-md ' />
         </Link>
+
+        <MdDelete onClick={handleDelete} />
+
+
       </div>
 
     </div>
